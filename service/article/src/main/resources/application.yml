@@ -1,0 +1,17 @@
+server.port: 9000
+
+spring:
+  application:
+    name: gc-board-article-service
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://10.129.59.145:3306/article
+    username: root
+    password: root
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false #이거 활성화 안하면 n+1현상 발생
+    show-sql: true # 실시간 현황보기
+    hibernate:
+      ddl-auto: none # 직접 만들기 위해서 none
