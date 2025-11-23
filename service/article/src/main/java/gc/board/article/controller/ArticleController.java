@@ -5,9 +5,12 @@ import gc.board.article.entity.Article;
 import gc.board.article.service.ArticleService;
 import gc.board.article.service.request.ArticleCreateRequest;
 import gc.board.article.service.request.ArticleUpdateRequest;
+import gc.board.article.service.response.ArticlePageResponse;
 import gc.board.article.service.response.ArticleResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +24,17 @@ public class ArticleController {
     public ArticleResponse read(@PathVariable Long articleId) {
         return articleService.read(articleId);
     }
+
+    //무한스크롤 목록조히
+    @GetMapping("/v1/articles/infinite-scroll")
+    public List<ArticleResponse> readInfiniteScroll(
+            @RequestParam("boardId") Long boardId,
+            @RequestParam("pageSize") Long pageSize,
+            @RequestParam(value = "lastArticleId", required = false) Long lastArticleId
+    ) {
+        return articleService.readAllInfiniteScroll(boardId, pageSize, lastArticleId);
+    }
+
     // 생성
     @PostMapping("/v1/articles")
     public ArticleResponse create(@RequestBody ArticleCreateRequest request) {
@@ -32,6 +46,15 @@ public class ArticleController {
                         @PathVariable Long articleId, @RequestBody
                         ArticleUpdateRequest request) {
         return articleService.update(articleId, request);
+    }
+    //목록조회
+    @GetMapping("/v1/articles")
+    public ArticlePageResponse readAll(
+            @RequestParam("boardId") Long boardId,
+            @RequestParam("page") Long page,
+            @RequestParam("pageSize") Long pageSize
+    ){
+        return articleService.readAll(boardId, page, pageSize);
     }
     // 삭제
     @DeleteMapping("/v1/articles/{articleId}")
